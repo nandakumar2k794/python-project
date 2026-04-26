@@ -16,7 +16,5 @@ Celery worker/beat
 ```
 
 ## Run
-1. Copy `.env.example` -> `.env`
-2. Fill Supabase + AI keys
-3. Run `docker compose up --build`
-4. Open `http://localhost`
+1. Run `docker compose up --build`
+2. Open `http://localhost
