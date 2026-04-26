@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="min-h-screen flex items-center justify-center px-4">
+  <div class="max-w-6xl w-full grid md:grid-cols-2 gap-8 items-center">
+    <!-- Left Side - Features -->
+    <article class="hidden md:block space-y-6">
+      <div>
+        <h2 class="font-heading text-5xl font-bold mb-4 bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
+          Fix Civic Issues Faster
+        </h2>
+        <p class="text-xl text-slate-300">
+          A district-wide platform for citizens, officers, and administrators to collaborate and solve civic problems together.
+        </p>
+      </div>
+      
+      <div class="space-y-4">
+        <div class="flex gap-4 items-start">
+          <div class="w-12 h-12 rounded-lg bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
+            <span class="text-2xl">OK</span>
+          </div>
+          <div>
+            <p class="font-semibold text-white">Live Status Tracking</p>
+            <p class="text-sm text-slate-400">Get real-time updates on your reported issues</p>
+          </div>
+        </div>
+        
+        <div class="flex gap-4 items-start">
+          <div class="w-12 h-12 rounded-lg bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+            <span class="text-2xl">AI</span>
+          </div>
+          <div>
+            <p class="font-semibold text-white">AI-Powered Triage</p>
+            <p class="text-sm text-slate-400">Smart categorization and priority assignment</p>
+          </div>
+        </div>
+        
+        <div class="flex gap-4 items-start">
+          <div class="w-12 h-12 rounded-lg bg-orange-500/20 flex items-center justify-center flex-shrink-0">
+            <span class="text-2xl">Map</span>
+          </div>
+          <div>
+            <p class="font-semibold text-white">Map-Based Discovery</p>
+            <p class="text-sm text-slate-400">Visualize and explore issues in your ward</p>
+          </div>
+        </div>
+      </div>
+    </article>
+    
+    <!-- Right Side - Login Form -->
+    <article class="glass-card p-8 rounded-2xl space-y-6">
+      <div>
+        <h1 class="font-heading text-3xl font-bold mb-2">Welcome Back</h1>
+        <p class="text-slate-400">Sign in to your account to continue</p>
+      </div>
+      
+      <form id="login-form" class="space-y-4">
+        <div>
+          <label class="label">Email Address</label>
+          <input 
+            class="input text-base" 
+            name="email" 
+            type="email" 
+            required 
+            placeholder="your@email.com"
+            autocomplete="email"
+          >
+        </div>
+        
+        <div>
+          <label class="label">Password</label>
+          <input 
+            class="input text-base" 
+            name="password" 
+            type="password" 
+            required 
+            placeholder="Enter your password"
+            autocomplete="current-password"
+          >
+        </div>
+        
+        <button class="btn-primary w-full py-3 text-lg font-semibold" type="submit">
+          Sign In
+        </button>
+      </form>
+      
+      <div class="border-t border-slate-800"></div>
+      
+      <div class="text-center space-y-2">
+        <p class="text-slate-400">New here?</p>
+        <a href="/register/" class="inline-block text-emerald-400 hover:text-emerald-300 font-semibold transition-colors">
+          Create an account ->
+        </a>
+      </div>
+      
+      <div class="pt-4 text-xs text-slate-500 text-center">
+        <p>Demo credentials available | Check docs for test accounts</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<script>
+  window.CIVIC_PAGE = 'login';
+</script>
+{% endblock %}

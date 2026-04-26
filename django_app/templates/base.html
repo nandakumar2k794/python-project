@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en" class="dark" dir="ltr">
+<head>
+  <!-- Meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes">
+  <meta name="description" content="Civic Issue Reporting System - Report and track civic infrastructure issues in your district">
+  <meta name="keywords" content="civic, issues, reporting, government, infrastructure, potholes, drainage">
+  <meta name="author" content="Civic Report">
+  <meta name="theme-color" content="#00C896">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Civic Report">
+  
+  <!-- SEO & Open Graph -->
+  <meta property="og:title" content="Civic Issue Reporting">
+  <meta property="og:description" content="Report civic issues and track their resolution in real-time">
+  <meta property="og:type" content="website">
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <!-- Security Headers -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  
+  <!-- Accessibility -->
+  <meta name="accessibility" content="true">
+  
+  <title>Civic Issue Reporting</title>
+  
+  <!-- Preload Critical Resources -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500&family=Syne:wght@500;700&display=swap" rel="stylesheet">
+  
+  <!-- Leaflet for Maps -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class'
+    }
+  </script>
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="/static/css/styles.css">
+  
+  <!-- Inline Critical CSS -->
+  <style>
+    @keyframes fadeOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(10px)}}
+    @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .animate-slideIn{animation:slideIn 300ms cubic-bezier(.34,.1,.68,1)}
+    .animate-fadeOut{animation:fadeOut 300ms cubic-bezier(.34,.1,.68,1)}
+    .animate-slideUp{animation:slideUp 300ms cubic-bezier(.34,.1,.68,1)}
+    #global-loader{animation:fadeIn 200ms ease-out}
+    header{box-shadow:0 8px 32px rgba(0,200,150,.05)}
+    
+    /* Light Mode Overrides */
+    html:not(.dark) body{background-color:#f8fafc;color:#1e293b}
+    html:not(.dark) .glass-card{background:rgba(255,255,255,.8);border:1px solid rgba(0,0,0,.1)}
+    html:not(.dark) .btn-primary{background:#0F4C81;color:#fff}
+    html:not(.dark) .btn-muted{background:#e2e8f0;color:#1e293b}
+    html:not(.dark) .input{background:#fff;border:1px solid #cbd5e1;color:#1e293b}
+    html:not(.dark) .input::placeholder{color:#94a3b8}
+    html:not(.dark) .label{color:#475569}
+    html:not(.dark) .nav-pill{border:1px solid #cbd5e1;color:#334155}
+    html:not(.dark) .nav-pill:hover{background:rgba(0,200,150,.1);border-color:#00C896;color:#0F4C81}
+    html:not(.dark) .issue-card{background:#f1f5f9;border:1px solid #cbd5e1}
+    html:not(.dark) .issue-card:hover{border-color:#00C896;background:#fff}
+    html:not(.dark) a{color:#0F4C81}
+    html:not(.dark) a:hover{color:#00C896}
+    html:not(.dark) .text-slate-400{color:#94a3b8}
+    html:not(.dark) .text-slate-300{color:#cbd5e1}
+    html:not(.dark) .text-slate-100{color:#f1f5f9}
+    
+    /* Skip to main content link */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: #00C896;
+      color: #000;
+      padding: 8px;
+      z-index: 100;
+    }
+    .skip-link:focus {
+      top: 0;
+    }
+    
+    /* Focus visible for accessibility */
+    *:focus-visible {
+      outline: 2px solid #00C896;
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300 min-h-screen" data-page="{% block page_name %}default{% endblock %}">
+  <!-- Skip Navigation Link for Accessibility -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  
+  <!-- Header -->
+  <header class="sticky top-0 z-30 glass-card mx-4 mt-4 p-3 rounded-xl transition-colors duration-300" role="banner">
+    <div class="flex items-center justify-between gap-3 flex-wrap">
+      <a href="/" class="font-heading text-2xl tracking-tight font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent hover:opacity-80 transition-opacity" aria-label="Civic Report Home">Civic Report</a>
+      
+      <!-- Navigation -->
+      <nav class="hidden md:flex items-center gap-2" aria-label="Main Navigation">
+        <a href="/citizen/" class="nav-pill hover:border-emerald-400" aria-label="Citizen Dashboard">Citizen</a>
+        <a href="/officer/" class="nav-pill hover:border-orange-400" aria-label="Officer Dashboard">Officer</a>
+        <a href="/admin-dashboard/" class="nav-pill hover:border-sky-400" aria-label="Admin Dashboard">Admin</a>
+      </nav>
+      
+      <!-- User Controls -->
+      <div class="flex items-center gap-2 flex-wrap justify-end">
+        <span id="session-user" class="text-sm text-slate-400 hidden md:inline" aria-live="polite"></span>
+        <a id="login-btn" href="/login/" class="btn-muted hidden" aria-label="Login to your account">Login</a>
+        <a id="register-btn" href="/register/" class="btn-muted hidden" aria-label="Create new account">Register</a>
+        <button id="theme-toggle" class="btn-primary" title="Toggle dark/light theme" aria-label="Toggle theme" aria-pressed="true">Theme</button>
+        <button id="logout-btn" class="btn-muted hidden" aria-label="Log out of your account">Logout</button>
+      </div>
+    </div>
+  </header>
+  
+  <!-- Main Content -->
+  <main id="main-content" class="p-4 md:p-6" role="main">
+    {% block content %}{% endblock %}
+  </main>
+  
+  <!-- Footer -->
+  <footer class="mt-12 py-6 border-t border-slate-800 text-center text-sm text-slate-500" role="contentinfo">
+    <p>Civic Issue Reporting System | Built with Django, Flask AI and real-time tracking</p>
+    <p class="mt-2 text-xs">Copyright 2024. <a href="/privacy/" class="hover:text-emerald-400">Privacy Policy</a> | <a href="/terms/" class="hover:text-emerald-400">Terms of Service</a></p>
+  </footer>
+  
+  <!-- Toast Container -->
+  <div id="toast-container" class="fixed top-20 right-4 space-y-2 z-50 max-w-sm" role="region" aria-live="polite" aria-atomic="true" aria-label="Notifications">
+  </div>
+  
+  <!-- Global Loader -->
+  <div id="global-loader" class="hidden fixed inset-0 bg-black/40 items-center justify-center z-40 backdrop-blur-sm" role="status" aria-label="Loading content">
+    <div class="glass-card p-8 rounded-xl">
+      <div class="flex flex-col items-center gap-3">
+        <div class="w-8 h-8 border-4 border-slate-600 border-t-emerald-400 rounded-full animate-spin" aria-hidden="true"></div>
+        <p class="text-slate-300">Processing...</p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Scripts -->
+  <script defer src="/static/js/app.js"></script>
+  <script defer src="/static/js/ws.js"></script>
+  
+  <!-- Chart.js for Analytics (loaded on demand) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js" defer></script>
+  
+  <!-- Leaflet for Maps -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+  
+  <!-- No-script fallback -->
+  <noscript>
+    <div style="background: #fff3cd; border: 1px solid #ffc107; padding: 12px; margin: 12px; border-radius: 4px; color: #856404;">
+      This application requires JavaScript to be enabled. Please enable JavaScript in your browser settings.
+    </div>
+  </noscript>
+</body>
+</html>

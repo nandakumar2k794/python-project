@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="max-w-7xl mx-auto">
+  <div class="mb-8">
+    <h1 class="font-heading text-4xl font-bold">Officer Command Board</h1>
+    <p class="text-slate-400 mt-2">Drag issues across columns to update their status in real-time</p>
+  </div>
+  
+  <div class="grid md:grid-cols-3 gap-6" id="kanban">
+    <!-- Submitted Column -->
+    <article class="glass-card p-6 rounded-xl">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-2xl">New</span>
+        <h3 class="font-heading text-xl font-bold">Submitted</h3>
+        <span class="ml-auto px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full text-sm font-medium">New</span>
+      </div>
+      <div class="kanban-col border-2 border-dashed border-blue-500/30 hover:border-blue-500/50 rounded-lg p-2 min-h-96 transition-all" data-status="Submitted" id="col-submitted"></div>
+      <p class="text-xs text-slate-500 mt-3">Drag issues here to mark as submitted</p>
+    </article>
+    
+    <!-- In Progress Column -->
+    <article class="glass-card p-6 rounded-xl">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-2xl">Ops</span>
+        <h3 class="font-heading text-xl font-bold">In Progress</h3>
+        <span class="ml-auto px-3 py-1 bg-yellow-500/20 text-yellow-300 rounded-full text-sm font-medium">Active</span>
+      </div>
+      <div class="kanban-col border-2 border-dashed border-yellow-500/30 hover:border-yellow-500/50 rounded-lg p-2 min-h-96 transition-all" data-status="In Progress" id="col-progress"></div>
+      <p class="text-xs text-slate-500 mt-3">Issues being worked on</p>
+    </article>
+    
+    <!-- Resolved Column -->
+    <article class="glass-card p-6 rounded-xl">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-2xl">Done</span>
+        <h3 class="font-heading text-xl font-bold">Resolved</h3>
+        <span class="ml-auto px-3 py-1 bg-emerald-500/20 text-emerald-300 rounded-full text-sm font-medium">Done</span>
+      </div>
+      <div class="kanban-col border-2 border-dashed border-emerald-500/30 hover:border-emerald-500/50 rounded-lg p-2 min-h-96 transition-all" data-status="Resolved" id="col-resolved"></div>
+      <p class="text-xs text-slate-500 mt-3">Completed issues</p>
+    </article>
+  </div>
+  
+  <div class="mt-8 p-6 bg-blue-500/5 border border-blue-500/20 rounded-xl">
+    <p class="text-sm text-blue-300">
+      <strong>Quick Tips:</strong> Drag and drop issues between columns to update their status. Click on an issue card to see more details. Upload work proof photos before or after resolving an issue so citizens can verify the work done.
+    </p>
+  </div>
+
+  <div id="issue-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] hidden flex items-center justify-center p-4">
+    <div class="glass-card max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center mb-6 p-4 border-b border-slate-800">
+        <h3 id="modal-title" class="font-heading text-xl font-bold"></h3>
+        <button id="close-modal" class="text-slate-400 hover:text-white text-xl">&times;</button>
+      </div>
+      <div class="p-6 space-y-4">
+        <div class="flex gap-4 text-sm text-slate-300 mb-4 flex-wrap">
+          <span id="modal-code"></span>
+          <span class="status-pill" id="modal-status"></span>
+          <span id="modal-priority"></span>
+        </div>
+        <div id="modal-description" class="text-slate-200 leading-relaxed"></div>
+        <div id="modal-location" class="text-sm text-slate-400"></div>
+        <div id="modal-ai-insights" class="hidden rounded-2xl border border-cyan-400/20 bg-cyan-400/5 p-4 space-y-3">
+          <div class="flex items-center justify-between gap-3">
+            <h4 class="font-heading text-lg font-bold text-cyan-100">AI Insights</h4>
+            <span id="modal-ai-severity" class="status-pill bg-cyan-500/10 text-cyan-300"></span>
+          </div>
+          <p id="modal-ai-summary" class="text-sm text-cyan-50"></p>
+          <p id="modal-ai-impact" class="text-sm text-slate-300"></p>
+          <div class="text-sm text-slate-300">
+            <strong class="text-slate-100">Suggested department:</strong>
+            <span id="modal-ai-department"></span>
+          </div>
+          <div>
+            <strong class="text-sm text-slate-100">Recommended next steps</strong>
+            <ul id="modal-ai-actions" class="mt-2 space-y-2 text-sm text-slate-300"></ul>
+          </div>
+        </div>
+        <div class="flex gap-2 items-center text-sm text-slate-400 flex-wrap">
+          <span>Upvotes:</span>
+          <span id="modal-upvotes" class="font-mono"></span>
+          <button id="upvote-btn" class="btn-primary px-3 py-1 text-sm sm:w-auto">
+            Upvote
+          </button>
+        </div>
+        <div>
+          <h4 class="font-heading text-lg font-bold mb-3">Citizen Photos</h4>
+          <div id="modal-photos" class="grid grid-cols-2 md:grid-cols-3 gap-3"></div>
+        </div>
+        <div>
+          <h4 class="font-heading text-lg font-bold mb-3">Work Proof</h4>
+          <div id="modal-work-proof" class="grid grid-cols-2 md:grid-cols-3 gap-3"></div>
+        </div>
+        <div class="rounded-2xl border border-emerald-400/20 bg-emerald-400/5 p-4 space-y-3">
+          <div>
+            <label class="label">Upload Work Done Photos</label>
+            <input type="file" id="work-proof-upload" accept="image/*" multiple class="block w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gradient-to-r file:from-emerald-500 file:to-cyan-500 file:text-white cursor-pointer">
+          </div>
+          <div id="work-proof-previews" class="grid grid-cols-2 md:grid-cols-3 gap-3"></div>
+          <div>
+            <label class="label">Work Note</label>
+            <textarea id="work-proof-note" class="input min-h-24" placeholder="Describe what was completed, what still needs verification, and any on-site observations."></textarea>
+          </div>
+          <button id="submit-work-proof" class="btn-primary px-4 py-2 text-sm sm:w-auto">Upload for Verification</button>
+        </div>
+        <div class="text-xs text-slate-500 mt-4">
+          <span id="modal-date"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image Lightbox Modal -->
+  <div id="image-lightbox" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[99999] hidden flex items-center justify-center p-4">
+    <div class="max-w-5xl w-full flex flex-col items-center gap-4">
+      <img id="lightbox-image" src="" alt="Full size image" class="max-h-[80vh] object-contain rounded-lg">
+      <button id="close-lightbox" class="text-white hover:text-slate-300 text-3xl leading-none">&times;</button>
+    </div>
+  </div>
+</section>
+
+<script>window.CIVIC_PAGE='officer';</script>
+<script defer src="/static/js/dashboard.js"></script>
+{% endblock %}

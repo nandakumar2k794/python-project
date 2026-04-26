@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="max-w-4xl mx-auto">
+  <div class="mb-8">
+    <h1 class="font-heading text-4xl font-bold mb-2">Report a Civic Issue</h1>
+    <p class="text-slate-400">Help improve your community by reporting issues. Your feedback matters!</p>
+  </div>
+  
+  <div class="glass-card p-8 rounded-xl">
+    <div class="stepper mb-10" id="report-stepper">
+      <span class="step active cursor-pointer">1. Category</span>
+      <span class="step cursor-pointer">2. Location</span>
+      <span class="step cursor-pointer">3. Photos & AI</span>
+      <span class="step cursor-pointer">4. Description</span>
+    </div>
+    
+    <form id="report-form" class="space-y-6">
+      <!-- Step 1: Category -->
+      <div class="wizard-step" data-step="1">
+        <label class="label">Select Issue Category</label>
+        <select name="category" class="input text-base" required>
+          <option value="">-- Choose a category --</option>
+          <option value="Roads">Roads and Potholes</option>
+          <option value="Water">Water and Drainage</option>
+          <option value="Sanitation">Sanitation</option>
+          <option value="Electricity">Electricity and Street Lights</option>
+          <option value="Parks">Parks and Green Spaces</option>
+          <option value="Street Lights">Street Lighting</option>
+          <option value="Encroachment">Encroachment</option>
+          <option value="Others">Others</option>
+        </select>
+        <p class="text-xs text-slate-500 mt-2">Choose the category that best describes your issue</p>
+      </div>
+      
+      <!-- Step 2: Location -->
+      <div class="wizard-step hidden" data-step="2">
+        <div class="flex items-center justify-between mb-4">
+          <label class="label">Location Details</label>
+          <button type="button" id="use-current-location" class="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-sm font-medium rounded-lg hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-200">Use Current Location</button>
+        </div>
+        <input class="input" name="address" placeholder="Street name, ward, area, district" required>
+        <p class="text-xs text-slate-500 mt-2 mb-4">Enter the address where the issue is located</p>
+        
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="label">Latitude</label>
+            <input class="input" name="lat" placeholder="12.9716" type="number" step="0.0001">
+          </div>
+          <div>
+            <label class="label">Longitude</label>
+            <input class="input" name="lng" placeholder="77.5946" type="number" step="0.0001">
+          </div>
+        </div>
+        <p class="text-xs text-slate-500 mt-2">Leave empty to use default coordinates</p>
+      </div>
+      
+      <!-- Step 3: Photos & AI Description -->
+      <div class="wizard-step hidden" data-step="3">
+        <label class="label">Upload Photos or Videos</label>
+        <div class="space-y-4">
+          <div>
+            <label class="label">Upload Photos/Videos</label>
+            <input type="file" id="photo-upload" name="photo-upload" accept="image/*,video/*" multiple class="block w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gradient-to-r file:from-blue-500 file:to-cyan-500 file:text-white hover:file:shadow-lg hover:file:shadow-blue-500/30 cursor-pointer">
+            <p class="text-xs text-slate-500 mt-2">Upload photos or videos (up to 5 files, images: JPG/PNG/WebP/GIF, video: MP4/WebM). Live photo support included.</p>
+          </div>
+          
+          <div id="media-previews" class="grid grid-cols-2 sm:grid-cols-3 gap-4"></div>
+          
+          <div>
+            <label class="label">Or Paste Image/Video URLs</label>
+            <textarea class="input min-h-24" name="media" placeholder="Paste URLs here, one per line (up to 5)"></textarea>
+            <p class="text-xs text-slate-500 mt-2">You can also add media later from your issue details page</p>
+          </div>
+
+          <div class="rounded-2xl border border-cyan-400/20 bg-cyan-400/5 p-4 space-y-3">
+            <button type="button" id="ai-describe-from-media" class="btn-primary w-full">✨ Generate Description from Media</button>
+            <p class="text-xs text-cyan-300">Upload at least one image, then AI will analyze it to suggest a description</p>
+            <div id="ai-media-feedback" class="hidden mt-3 p-3 rounded-lg bg-cyan-900/20 border border-cyan-500/30">
+              <p id="ai-media-message" class="text-sm text-cyan-100"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Step 4: Description -->
+      <div class="wizard-step hidden" data-step="4">
+        <div class="flex items-center justify-between gap-3 mb-2">
+          <label class="label mb-0">Issue Title</label>
+          <button type="button" id="ai-improve-report" class="btn-muted px-4 py-2 text-sm sm:w-auto">Improve with AI</button>
+        </div>
+        <input class="input" name="title" placeholder="Brief title (max 100 characters)" required maxlength="100">
+        <p class="text-xs text-slate-500 mt-1 mb-4">Write a concise title for your issue</p>
+        
+        <label class="label">Detailed Description</label>
+        <textarea class="input min-h-40" name="description" placeholder="Provide detailed description of the issue..." required maxlength="500"></textarea>
+        <p class="text-xs text-slate-500 mt-1">Be specific about the problem, location, and impact</p>
+        <div id="ai-report-feedback" class="hidden mt-4 rounded-xl border border-cyan-400/20 bg-cyan-400/5 p-4 text-sm text-cyan-100"></div>
+      </div>
+      
+      <!-- Navigation Buttons -->
+      <div class="flex justify-between pt-6 border-t border-slate-800">
+        <a href="/citizen/" class="btn-muted inline-flex items-center">Cancel</a>
+        <div class="flex gap-3">
+          <button type="button" id="prev-step" class="btn-muted disabled:opacity-50"><- Back</button>
+          <button type="button" id="next-step" class="btn-primary">Next -></button>
+          <button type="submit" id="submit-report" class="btn-primary hidden">Submit Report</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  
+  <div class="mt-8 p-6 bg-emerald-500/5 border border-emerald-500/20 rounded-xl">
+    <p class="text-sm text-emerald-300">
+      <strong>Tip:</strong> Include as much detail as possible to help officials understand and prioritize the issue. Clear photos and exact locations are very helpful.
+    </p>
+  </div>
+</section>
+
+<script>window.CIVIC_PAGE='report';</script>
+<script defer src="/static/js/form-wizard.js"></script>
+{% endblock %}

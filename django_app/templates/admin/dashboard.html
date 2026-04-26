@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="max-w-7xl mx-auto space-y-8">
+  <div class="mb-8">
+    <h1 class="font-heading text-4xl font-bold">📊 Admin Analytics Dashboard</h1>
+    <p class="text-slate-400 mt-2">Real-time system metrics and district overview</p>
+  </div>
+  
+  <div class="grid md:grid-cols-3 gap-6">
+    <article class="glass-card p-6 rounded-xl border-l-4 border-blue-500 hover:shadow-lg hover:shadow-blue-500/10">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-slate-400 text-sm font-medium">Total Issues Reported</p>
+          <p class="text-4xl font-heading font-bold mt-3" id="adm-total">0</p>
+          <p class="text-xs text-slate-500 mt-2">System-wide submissions</p>
+        </div>
+        <span class="text-5xl">📋</span>
+      </div>
+    </article>
+    
+    <article class="glass-card p-6 rounded-xl border-l-4 border-emerald-500 hover:shadow-lg hover:shadow-emerald-500/10">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-slate-400 text-sm font-medium">Resolution Rate</p>
+          <p class="text-4xl font-heading font-bold mt-3" id="adm-rate">0%</p>
+          <p class="text-xs text-slate-500 mt-2">Issues marked as resolved</p>
+        </div>
+        <span class="text-5xl">📈</span>
+      </div>
+    </article>
+    
+    <article class="glass-card p-6 rounded-xl border-l-4 border-purple-500 hover:shadow-lg hover:shadow-purple-500/10">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-slate-400 text-sm font-medium">Active Wards</p>
+          <p class="text-4xl font-heading font-bold mt-3" id="adm-wards">0</p>
+          <p class="text-xs text-slate-500 mt-2">Across the district</p>
+        </div>
+        <span class="text-5xl">🗺️</span>
+      </div>
+    </article>
+  </div>
+  
+  <!-- Analytics Chart -->
+  <article class="glass-card p-8 rounded-xl">
+    <h2 class="font-heading text-2xl font-bold mb-6">📊 Issues by Category</h2>
+    <div class="w-full overflow-x-auto">
+      <canvas id="analyticsChart" class="max-h-80"></canvas>
+    </div>
+  </article>
+  
+  <!-- Ward Management -->
+  <article class="glass-card p-8 rounded-xl">
+    <h2 class="font-heading text-2xl font-bold mb-6">🏛️ Ward Management</h2>
+    <div id="ward-list" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+  </article>
+  
+  <!-- System Status -->
+  <div class="grid md:grid-cols-2 gap-6">
+    <article class="glass-card p-6 rounded-xl">
+      <h3 class="font-heading text-lg font-bold mb-4">🟢 System Status</h3>
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-slate-400">Database Connection</span>
+          <span class="text-emerald-400 font-medium">Active</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-slate-400">API Services</span>
+          <span class="text-emerald-400 font-medium">Running</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-slate-400">Real-time Updates</span>
+          <span class="text-emerald-400 font-medium">Connected</span>
+        </div>
+      </div>
+    </article>
+    
+    <article class="glass-card p-6 rounded-xl">
+      <h3 class="font-heading text-lg font-bold mb-4">📞 Quick Actions</h3>
+      <div class="space-y-2">
+        <button class="w-full p-3 bg-blue-500/10 hover:bg-blue-500/20 text-blue-300 rounded-lg transition-colors text-sm font-medium">
+          ⚙️ Configure System Settings
+        </button>
+        <button class="w-full p-3 bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 rounded-lg transition-colors text-sm font-medium">
+          👥 Manage Officers
+        </button>
+        <button class="w-full p-3 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 rounded-lg transition-colors text-sm font-medium">
+          📋 Export Report
+        </button>
+      </div>
+    </article>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>window.CIVIC_PAGE='admin';</script>
+{% endblock %}
